@@ -37,6 +37,7 @@ subprojects {
 			target("src/**/*.java")
 			googleJavaFormat("1.17.0")
 			removeUnusedImports()
+			forbidWildcardImports()
 			importOrder("java", "javax", "org", "com", "")
 		}
 
