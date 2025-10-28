@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -13,6 +14,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Set;
+import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Test;
 
@@ -22,6 +24,7 @@ import com.luisjrz96.blog.application.shared.error.ApplicationUnauthorizedExcept
 import com.luisjrz96.blog.application.shared.port.UserProvider;
 import com.luisjrz96.blog.application.shared.security.Actor;
 import com.luisjrz96.blog.application.shared.security.Role;
+import com.luisjrz96.blog.application.shared.tx.TransactionalExecutor;
 import com.luisjrz96.blog.domain.blog.category.CategoryId;
 import com.luisjrz96.blog.domain.blog.category.CategoryName;
 import com.luisjrz96.blog.domain.shared.ImageUrl;
@@ -33,11 +36,19 @@ class CreateCategoryHandlerTest {
     // given
     CategoryRepository repo = mock(CategoryRepository.class);
     UserProvider userProvider = mock(UserProvider.class);
+    TransactionalExecutor tx = mock(TransactionalExecutor.class);
 
     Actor admin = new Actor("admin-user", Set.of(Role.ADMIN));
     when(userProvider.getCurrentUser()).thenReturn(admin);
+    when(tx.executeInTransaction(any()))
+        .thenAnswer(
+            invocation -> {
+              @SuppressWarnings("unchecked")
+              Supplier<?> supplier = (Supplier<?>) invocation.getArgument(0);
+              return supplier.get();
+            });
 
-    CreateCategoryHandler handler = new CreateCategoryHandler(userProvider, repo);
+    CreateCategoryHandler handler = new CreateCategoryHandler(tx, userProvider, repo);
 
     var cmd =
         new CreateCategoryCommand(
@@ -68,11 +79,19 @@ class CreateCategoryHandlerTest {
     // given
     CategoryRepository repo = mock(CategoryRepository.class);
     UserProvider userProvider = mock(UserProvider.class);
+    TransactionalExecutor tx = mock(TransactionalExecutor.class);
 
     Actor viewer = new Actor("viewer-user", Set.of());
     when(userProvider.getCurrentUser()).thenReturn(viewer);
+    when(tx.executeInTransaction(any()))
+        .thenAnswer(
+            invocation -> {
+              @SuppressWarnings("unchecked")
+              Supplier<?> supplier = (Supplier<?>) invocation.getArgument(0);
+              return supplier.get();
+            });
 
-    CreateCategoryHandler handler = new CreateCategoryHandler(userProvider, repo);
+    CreateCategoryHandler handler = new CreateCategoryHandler(tx, userProvider, repo);
 
     var cmd =
         new CreateCategoryCommand(

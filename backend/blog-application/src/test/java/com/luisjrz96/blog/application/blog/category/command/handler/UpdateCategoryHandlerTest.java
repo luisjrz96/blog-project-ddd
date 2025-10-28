@@ -2,10 +2,17 @@ package com.luisjrz96.blog.application.blog.category.command.handler;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Test;
 
@@ -15,6 +22,7 @@ import com.luisjrz96.blog.application.shared.error.ApplicationUnauthorizedExcept
 import com.luisjrz96.blog.application.shared.port.UserProvider;
 import com.luisjrz96.blog.application.shared.security.Actor;
 import com.luisjrz96.blog.application.shared.security.Role;
+import com.luisjrz96.blog.application.shared.tx.TransactionalExecutor;
 import com.luisjrz96.blog.domain.blog.category.Category;
 import com.luisjrz96.blog.domain.blog.category.CategoryId;
 import com.luisjrz96.blog.domain.blog.category.CategoryName;
@@ -27,7 +35,8 @@ public class UpdateCategoryHandlerTest {
     // given
     CategoryRepository repo = mock(CategoryRepository.class);
     UserProvider userProvider = mock(UserProvider.class);
-    UpdateCategoryHandler handler = new UpdateCategoryHandler(userProvider, repo);
+    TransactionalExecutor tx = mock(TransactionalExecutor.class);
+    UpdateCategoryHandler handler = new UpdateCategoryHandler(tx, userProvider, repo);
 
     CategoryId id = new CategoryId(UUID.randomUUID());
     CategoryName newName = new CategoryName("Platform Engineering");
@@ -37,6 +46,13 @@ public class UpdateCategoryHandlerTest {
 
     Actor admin = new Actor("admin-user", Set.of(Role.ADMIN));
     when(userProvider.getCurrentUser()).thenReturn(admin);
+    when(tx.executeInTransaction(any()))
+        .thenAnswer(
+            invocation -> {
+              @SuppressWarnings("unchecked")
+              Supplier<?> supplier = (Supplier<?>) invocation.getArgument(0);
+              return supplier.get();
+            });
 
     Category loadedCategory = mock(Category.class);
     when(repo.load(id)).thenReturn(loadedCategory);
@@ -57,7 +73,8 @@ public class UpdateCategoryHandlerTest {
     // given
     CategoryRepository repo = mock(CategoryRepository.class);
     UserProvider userProvider = mock(UserProvider.class);
-    UpdateCategoryHandler handler = new UpdateCategoryHandler(userProvider, repo);
+    TransactionalExecutor tx = mock(TransactionalExecutor.class);
+    UpdateCategoryHandler handler = new UpdateCategoryHandler(tx, userProvider, repo);
 
     var cmd =
         new UpdateCategoryCommand(
@@ -67,6 +84,13 @@ public class UpdateCategoryHandlerTest {
 
     Actor viewer = new Actor("viewer-user", Set.of());
     when(userProvider.getCurrentUser()).thenReturn(viewer);
+    when(tx.executeInTransaction(any()))
+        .thenAnswer(
+            invocation -> {
+              @SuppressWarnings("unchecked")
+              Supplier<?> supplier = (Supplier<?>) invocation.getArgument(0);
+              return supplier.get();
+            });
 
     // when / then
     ApplicationUnauthorizedException ex =

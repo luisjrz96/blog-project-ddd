@@ -33,7 +33,7 @@ public class GetCategoriesPageHandlerTest {
     GetCategoriesPageHandler handler = new GetCategoriesPageHandler(reader);
 
     PageRequest pageRequest = PageRequest.of(0, 2);
-    CategoriesPageQuery query = new CategoriesPageQuery(pageRequest);
+    CategoriesPageQuery query = new CategoriesPageQuery(CategoryStatus.ACTIVE, pageRequest);
 
     CategoryViewDto dto1 =
         new CategoryViewDto(
@@ -52,7 +52,7 @@ public class GetCategoriesPageHandlerTest {
             new CategoryName("Platform"),
             new Slug("platform"),
             new ImageUrl("https://img/2.png"),
-            CategoryStatus.ARCHIVED,
+            CategoryStatus.ACTIVE,
             Instant.parse("2025-10-24T09:00:00Z"),
             null,
             Instant.parse("2025-10-24T12:00:00Z"));
