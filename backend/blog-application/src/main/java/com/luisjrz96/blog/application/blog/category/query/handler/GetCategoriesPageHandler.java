@@ -14,6 +14,9 @@ public class GetCategoriesPageHandler {
   }
 
   public Page<CategoryViewDto> handle(CategoriesPageQuery query) {
+    if (query.status() != null) {
+      return reader.getPageWithStatus(query.status(), query.pageRequest());
+    }
     return reader.getPage(query.pageRequest());
   }
 }
