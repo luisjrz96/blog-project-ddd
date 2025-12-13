@@ -24,8 +24,6 @@ public class AuthorProfile extends AggregateRoot {
   private Instant createdAt;
   private Instant updatedAt;
 
-  public AuthorProfile() {}
-
   public static AuthorProfile create(
       AuthorId authorId,
       Markdown bio,

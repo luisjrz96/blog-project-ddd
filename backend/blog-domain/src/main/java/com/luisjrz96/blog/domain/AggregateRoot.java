@@ -7,7 +7,7 @@ public abstract class AggregateRoot {
   protected int version = 0;
   private final List<DomainEvent> uncommittedEvents;
 
-  public AggregateRoot() {
+  protected AggregateRoot() {
     this.uncommittedEvents = new ArrayList<>();
   }
 

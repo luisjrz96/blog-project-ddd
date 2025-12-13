@@ -16,7 +16,7 @@ public record Slug(String value) {
     result = Normalizer.normalize(result, Normalizer.Form.NFD);
     result = result.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     result = result.replaceAll("[^a-z0-9]+", "-");
-    result = result.replaceAll("^-|-$", "");
+    result = result.replaceAll("^-$", "");
     return result;
   }
 

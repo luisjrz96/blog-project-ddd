@@ -19,8 +19,6 @@ public class Tag extends AggregateRoot {
   private Instant updatedAt;
   private Instant archivedAt;
 
-  public Tag() {}
-
   public static Tag create(TagName name) {
     Tag tag = new Tag();
     Instant now = Instant.now();

@@ -39,8 +39,6 @@ public class Post extends AggregateRoot {
   private Instant publishedAt;
   private Instant archivedAt;
 
-  public Post() {}
-
   private void apply(PostCreated e) {
     this.id = e.postId();
     this.authorId = e.authorId();

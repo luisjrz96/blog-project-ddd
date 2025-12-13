@@ -4,6 +4,10 @@ import com.luisjrz96.blog.domain.exception.DomainException;
 
 public class ValidationUtil {
 
+  private ValidationUtil() {
+    throw new DomainException("ValidationUtil must not be instantiated");
+  }
+
   public static <T> T requireNonNull(T obj, String message) {
     if (obj == null) {
       throw new DomainException(message);

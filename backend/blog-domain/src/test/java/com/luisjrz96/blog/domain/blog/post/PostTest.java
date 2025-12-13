@@ -65,6 +65,7 @@ class PostTest {
 
   // ---------- CREATE ----------
 
+  @SuppressWarnings("java:S5961")
   @Test
   void create_shouldInitializeDraftPost_andEmitPostCreated() {
     // given

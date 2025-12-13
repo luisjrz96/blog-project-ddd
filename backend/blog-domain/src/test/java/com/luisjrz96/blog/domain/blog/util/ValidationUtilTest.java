@@ -9,6 +9,11 @@ import org.junit.jupiter.api.Test;
 
 import com.luisjrz96.blog.domain.exception.DomainException;
 import com.luisjrz96.blog.domain.util.ValidationUtil;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 class ValidationUtilTest {
 
@@ -40,35 +45,24 @@ class ValidationUtilTest {
     assertDoesNotThrow(() -> ValidationUtil.notNullAndNonBlank("valid text", "should not throw"));
   }
 
-  @Test
-  void notNullAndNonBlank_throwsWhenNull() {
-    String message = "bio cannot be null or blank";
-
+  @ParameterizedTest
+  @MethodSource("invalidStrings")
+  void notNullAndNonBlank_throwsWhenInvalid(String value, String message) {
     DomainException ex =
-        assertThrows(DomainException.class, () -> ValidationUtil.notNullAndNonBlank(null, message));
+            assertThrows(
+                    DomainException.class,
+                    () -> ValidationUtil.notNullAndNonBlank(value, message)
+            );
 
     assertEquals(message, ex.getMessage());
   }
 
-  @Test
-  void notNullAndNonBlank_throwsWhenEmpty() {
-    String message = "title cannot be empty";
-
-    DomainException ex =
-        assertThrows(DomainException.class, () -> ValidationUtil.notNullAndNonBlank("", message));
-
-    assertEquals(message, ex.getMessage());
-  }
-
-  @Test
-  void notNullAndNonBlank_throwsWhenOnlyWhitespace() {
-    String message = "slug cannot be blank";
-
-    DomainException ex =
-        assertThrows(
-            DomainException.class, () -> ValidationUtil.notNullAndNonBlank("   \t  ", message));
-
-    assertEquals(message, ex.getMessage());
+  static Stream<Arguments> invalidStrings() {
+    return Stream.of(
+            Arguments.of(null, "bio cannot be null or blank"),
+            Arguments.of("", "title cannot be empty"),
+            Arguments.of("   \t  ", "slug cannot be blank")
+    );
   }
 
   // --- maxLength ---

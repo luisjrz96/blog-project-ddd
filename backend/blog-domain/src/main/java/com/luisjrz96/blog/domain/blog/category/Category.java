@@ -21,8 +21,6 @@ public class Category extends AggregateRoot {
   private Instant updatedAt;
   private Instant archivedAt;
 
-  public Category() {}
-
   public static Category create(CategoryName categoryName, ImageUrl defaultImage) {
     Category category = new Category();
     Instant now = Instant.now();
