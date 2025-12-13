@@ -21,6 +21,9 @@ import com.luisjrz96.blog.domain.shared.Title;
 import com.luisjrz96.blog.domain.util.ValidationUtil;
 
 public class Post extends AggregateRoot {
+
+  private static final int MAX_TAGS = 5;
+
   private PostId id;
   private AuthorId authorId;
   private Title title;
@@ -42,20 +45,19 @@ public class Post extends AggregateRoot {
     this.id = e.postId();
     this.authorId = e.authorId();
     this.title = e.title();
-    this.slug = e.slug();
+    this.slug = new Slug(title.value());
     this.summary = e.summary();
     this.body = e.body();
     this.categoryId = e.categoryId();
     this.tagIds = new ArrayList<>(e.tagIds());
     this.coverImage = e.coverImage();
     this.status = e.status();
-    this.publishedAt = e.publishedAt();
     this.createdAt = e.createdAt();
   }
 
   private void apply(PostUpdated e) {
     this.title = e.title();
-    this.slug = e.slug();
+    this.slug = new Slug(e.title().value());
     this.summary = e.summary();
     this.body = e.body();
     this.categoryId = e.categoryId();
@@ -94,23 +96,21 @@ public class Post extends AggregateRoot {
       CategoryId categoryId,
       List<TagId> tagIds,
       ImageUrl coverImage) {
+    ensureMaxTagSize(tagIds);
     Post post = new Post();
-    Slug slug = Slug.from(title.value());
     Instant now = Instant.now();
-
     post.applyChange(
         new PostCreated(
             PostId.newId(),
             authorId,
             title,
-            slug,
+            new Slug(title.value()),
             summary,
             body,
             PostStatus.DRAFT,
             categoryId,
             tagIds,
             coverImage,
-            null,
             now));
 
     return post;
@@ -123,13 +123,19 @@ public class Post extends AggregateRoot {
       CategoryId categoryId,
       List<TagId> tagIds,
       ImageUrl coverImage) {
-
+    ensureMaxTagSize(tagIds);
     Instant now = Instant.now();
-    Slug newSlug = new Slug(title.value());
-
     this.applyChange(
         new PostUpdated(
-            this.id, title, newSlug, summary, body, categoryId, tagIds, coverImage, now));
+            this.id,
+            title,
+            new Slug(title.value()),
+            summary,
+            body,
+            categoryId,
+            tagIds,
+            coverImage,
+            now));
   }
 
   public void publish() {
@@ -207,5 +213,12 @@ public class Post extends AggregateRoot {
 
   public Instant getUpdatedAt() {
     return updatedAt;
+  }
+
+  private static void ensureMaxTagSize(List<TagId> tagIds) {
+    if (tagIds != null && !tagIds.isEmpty() && tagIds.size() > MAX_TAGS) {
+      throw new DomainException(
+          String.format("Post can only contain a maximum of %s tagIds", MAX_TAGS));
+    }
   }
 }

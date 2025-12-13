@@ -39,7 +39,7 @@ public class Tag extends AggregateRoot {
       throw new DomainException("Tag already archived");
     }
     Instant now = Instant.now();
-    this.applyChange(new TagArchived(now));
+    this.applyChange(new TagArchived(this.id, now));
   }
 
   @Override

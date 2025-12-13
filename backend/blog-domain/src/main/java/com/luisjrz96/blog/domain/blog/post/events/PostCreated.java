@@ -26,6 +26,5 @@ public record PostCreated(
     CategoryId categoryId,
     List<TagId> tagIds,
     ImageUrl coverImage,
-    Instant publishedAt,
     Instant createdAt)
     implements DomainEvent {}

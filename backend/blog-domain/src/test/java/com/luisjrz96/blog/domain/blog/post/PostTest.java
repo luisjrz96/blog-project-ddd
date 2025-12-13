@@ -112,7 +112,6 @@ class PostTest {
     assertEquals(cover, created.coverImage());
     assertEquals(post.getSlug(), created.slug(), "slug in event should match aggregate slug");
     assertEquals(post.getCreatedAt(), created.createdAt(), "createdAt should match");
-    assertNull(created.publishedAt(), "publishedAt in PostCreated should start null");
   }
 
   // ---------- UPDATE ----------
@@ -300,7 +299,6 @@ class PostTest {
         post.getArchivedAt().isBefore(beforeArchive),
         "archivedAt should not be in the past relative to call");
 
-    // After archive, we do NOT force-updatedAt in your current code.
     assertNull(post.getUpdatedAt(), "archive() should not touch updatedAt in current design");
 
     // then: emitted event
@@ -365,7 +363,6 @@ class PostTest {
             initialCategory,
             initialTags,
             initialCover,
-            null, // publishedAt
             createdAt);
 
     Title updatedTitle = title("Better Title");

@@ -139,7 +139,7 @@ class TagTest {
     TagUpdated updated = new TagUpdated(id, renamed, renamedSlug, updatedAt);
 
     Instant archivedAt = Instant.parse("2025-10-24T12:00:00Z");
-    TagArchived archived = new TagArchived(archivedAt);
+    TagArchived archived = new TagArchived(id, archivedAt);
 
     List<DomainEvent> history = List.of(created, updated, archived);
 

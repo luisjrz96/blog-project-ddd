@@ -49,7 +49,7 @@ public class Category extends AggregateRoot {
       throw new DomainException("Category already archived");
     }
     Instant now = Instant.now();
-    this.applyChange(new CategoryArchived(now));
+    this.applyChange(new CategoryArchived(this.id, now));
   }
 
   @Override
