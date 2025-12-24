@@ -1,0 +1,1464 @@
+openapi: 3.1.0
+info:
+  title: Blog API
+  description: API for managing blog content (categories, tags, posts, author profiles).
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080
+    description: Local server
+
+tags:
+  - name: Categories
+    description: Manage blog categories
+  - name: Tags
+    description: Manage tags for posts
+  - name: Posts
+    description: Manage blog posts
+  - name: Authors
+    description: Manage author profiles
+
+paths:
+  /api/categories:
+    get:
+      operationId: getCategories
+      tags: [ Categories ]
+      summary: List categories (public)
+      description: Returns paginated list of categories with status published.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Page index (0-based)
+        - in: query
+          name: size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Page size
+      responses:
+        '200':
+          description: Page of categories
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageCategoryView'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /api/categories/{id}:
+    get:
+      operationId: getCategory
+      tags: [ Categories ]
+      summary: Get category by id (public - active categories only)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Category ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Category info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryView'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /api/admin/categories:
+    get:
+      operationId: adminGetCategories
+      tags: [ Categories ]
+      summary: List categories (admin only)
+      description: Returns paginated list of categories.
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Page index (0-based)
+        - in: query
+          name: size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Page size
+        - in: query
+          name: status
+          schema:
+            $ref: '#/components/schemas/CategoryStatus'
+          required: false
+          description: Filter by status (ACTIVE or ARCHIVED)
+      responses:
+        '200':
+          description: Page of categories
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageCategoryView'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+    post:
+      tags: [ Categories ]
+      summary: Create a category (admin only)
+      description: Creates a new category. Requires role ADMIN.
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCategoryRequest'
+      responses:
+        '201':
+          description: Category created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCategoryResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /api/admin/categories/{id}:
+    get:
+      operationId: adminGetCategory
+      tags: [ Categories ]
+      summary: Get category by id (admin only)
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Category ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Category info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryView'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+    put:
+      operationId: adminUpdateCategory
+      tags: [ Categories ]
+      summary: Update a category (admin only)
+      description: Update name, image, etc. Requires role ADMIN.
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Category ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCategoryRequest'
+      responses:
+        '204':
+          description: Updated successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+    delete:
+      operationId: adminArchiveCategory
+      tags: [ Categories ]
+      summary: Archive a category (admin only)
+      description: Marks the category as ARCHIVED (soft delete). Requires role ADMIN.
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Category ID
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Archived
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /api/tags:
+    get:
+      operationId: getTags
+      tags: [ Tags ]
+      summary: List tags (public - active tags only)
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Page index (0-based)
+        - in: query
+          name: size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Page size
+      responses:
+        '200':
+          description: List of tags
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageTagView'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /api/tags/{id}:
+    get:
+      operationId: getTag
+      tags: [ Tags ]
+      summary: List tag (public - active tag only)
+      parameters:
+        - in: path
+          name: id
+          description: Tag ID
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Tag
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagView'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /api/admin/tags:
+    get:
+      operationId: adminGetTags
+      tags: [ Tags ]
+      summary: List tags (admin only)
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Page index (0-based)
+        - in: query
+          name: size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Page size
+        - in: query
+          name: status
+          schema:
+            $ref: '#/components/schemas/TagStatus'
+          required: false
+          description: Filter by status (ACTIVE or ARCHIVED)
+      responses:
+        '200':
+          description: List of tags
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageTagView'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+    post:
+      operationId: adminCreateTag
+      tags: [ Tags ]
+      summary: Create a tag (admin only)
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTagRequest'
+      responses:
+        '201':
+          description: Tag created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTagResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /api/admin/tags/{id}:
+    get:
+      operationId: adminGetTag
+      tags: [ Tags ]
+      summary: List tags (admin only)
+      security:
+        - basicAuth: []
+      parameters:
+        - in: path
+          name: id
+          description: Tag ID
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Tag
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagView'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+    put:
+      operationId: adminUpdateTag
+      tags: [ Tags ]
+      summary: Update a tag (admin only)
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Tag ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTagRequest'
+      responses:
+        '204':
+          description: Updated
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+    delete:
+      operationId: adminArchiveTag
+      tags: [ Tags ]
+      summary: Archive a tag (admin only)
+      description: Marks the tag as ARCHIVED.
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Tag ID
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Archived
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /api/posts:
+    get:
+      operationId: getPostPage
+      tags: [ Posts ]
+      summary: Public list of posts
+      description: Returns published posts (status=PUBLISHED). Supports pagination.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - in: query
+          name: size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - in: query
+          name: categoryId
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: tagId
+          schema:
+            type: string
+          required: false
+      responses:
+        '200':
+          description: Page of posts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagePostSummaryView'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /api/posts/{id}:
+    get:
+      operationId: getPost
+      tags: [ Posts ]
+      summary: Get post by id (public - published posts only)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Post ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Full post view
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostDetailView'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+
+  /api/admin/posts:
+    get:
+      operationId: adminGetPostPage
+      tags: [ Posts ]
+      summary: Public list of posts
+      description: Returns published posts (status=PUBLISHED). Supports pagination.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - in: query
+          name: size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - in: query
+          name: categoryId
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: tagId
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: status
+          required: true
+          schema:
+            $ref: '#/components/schemas/PostStatus'
+      responses:
+        '200':
+          description: Page of posts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagePostSummaryView'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+    post:
+      operationId: adminCreatePost
+      tags: [ Posts ]
+      summary: Create a post (admin only)
+      description: Creates a new post in DRAFT status.
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePostRequest'
+      responses:
+        '201':
+          description: Post created (draft)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePostResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /api/admin/posts/{id}:
+    get:
+      operationId: adminGetPost
+      tags: [ Posts ]
+      summary: Get post by id (admin only)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Post ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Full post view
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostDetailView'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+    put:
+      operationId: adminUpdatePost
+      tags: [ Posts ]
+      summary: Update post content (admin only)
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Post ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePostRequest'
+      responses:
+        '204':
+          description: Updated
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+    delete:
+      operationId: adminArchivePost
+      tags: [ Posts ]
+      summary: Archive post (admin only)
+      description: Sets status=ARCHIVED on the post aggregate.
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Archived
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+  /api/admin/posts/{id}/publish:
+    post:
+      operationId: adminPublishPost
+      tags: [ Posts ]
+      summary: Publish post (admin only)
+      description: Transition post from DRAFT to PUBLISHED.
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Post ID
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Published
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+
+  /api/authors/{id}:
+    get:
+      tags: [ Authors ]
+      summary: Get author profile (public)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Author ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Author profile details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorProfileView'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+    put:
+      tags: [ Authors ]
+      summary: Update author profile (admin only)
+      security:
+        - basicAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Author ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAuthorProfileRequest'
+      responses:
+        '204':
+          description: Updated
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+components:
+
+  securitySchemes:
+    AdminAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Must resolve to a user with ADMIN role
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Basic authentication
+
+  schemas:
+
+    # ------------------------
+    # CATEGORY
+    # ------------------------
+    CategoryStatus:
+      type: string
+      enum: [ACTIVE, ARCHIVED]
+
+    CategoryView:
+      type: object
+      required: [id, name, slug, status, createdAt]
+      properties:
+        id:
+          type: string
+          example: "b350e22d-929c-4dc7-82a0-d58300bafba9"
+        name:
+          type: string
+          example: "Backend"
+        slug:
+          type: string
+          example: "backend"
+        defaultImage:
+          type:
+            - string
+            - "null"
+          format: uri
+          example: "https://cdn.example.com/images/backend.png"
+        status:
+          $ref: '#/components/schemas/CategoryStatus'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+        archivedAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+
+    PageCategoryView:
+      type: object
+      required: [content, page, size, totalElements, totalPages]
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryView'
+        page:
+          type: integer
+          example: 0
+        size:
+          type: integer
+          example: 20
+        totalElements:
+          type: integer
+          format: int64
+          example: 42
+        totalPages:
+          type: integer
+          example: 3
+
+    CreateCategoryRequest:
+      type: object
+      required: [name, defaultImage]
+      properties:
+        name:
+          type: string
+          example: "Backend"
+        defaultImage:
+          type: string
+          format: uri
+          example: "https://cdn.example.com/categories/backend.png"
+
+    CreateCategoryResponse:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: string
+          example: "3fe829b3-4a32-4a0f-8cc8-753138a4bf4a"
+
+    UpdateCategoryRequest:
+      type: object
+      required: [name, defaultImage]
+      properties:
+        name:
+          type: string
+          example: "Platform Engineering"
+        defaultImage:
+          type: string
+          format: uri
+          example: "https://cdn.example.com/categories/platform-eng.png"
+
+
+    # ------------------------
+    # TAG
+    # ------------------------
+    TagStatus:
+      type: string
+      enum: [ACTIVE, ARCHIVED]
+
+    TagView:
+      type: object
+      required: [id, name, slug, status, createdAt]
+      properties:
+        id:
+          type: string
+          example: "ec02e0a6-5528-4661-b863-81171c3a98ff"
+        name:
+          type: string
+          example: "DDD"
+        slug:
+          type: string
+          example: "ddd"
+        status:
+          $ref: '#/components/schemas/TagStatus'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+        archivedAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+
+    PageTagView:
+      type: object
+      required: [ content, page, size, totalElements, totalPages ]
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagView'
+        page:
+          type: integer
+          example: 0
+        size:
+          type: integer
+          example: 20
+        totalElements:
+          type: integer
+          format: int64
+          example: 42
+        totalPages:
+          type: integer
+          example: 3
+
+    CreateTagRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          example: "DDD"
+
+    CreateTagResponse:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: string
+          example: "ca21ba83-1292-453a-b2fa-d7151df21dea"
+
+    UpdateTagRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          example: "Distributed Systems"
+
+
+    # ------------------------
+    # POST
+    # ------------------------
+    PostStatus:
+      type: string
+      enum: [DRAFT, PUBLISHED, ARCHIVED]
+      example: DRAFT
+
+    PostSummaryView:
+      type: object
+      required: [id, title, slug, summary, coverImage, status, publishedAt]
+      properties:
+        id:
+          type: string
+          example: "8eb917ed-26eb-4a5f-b245-45617f5b2920"
+        title:
+          type: string
+          example: "How to Scale Event-Driven Systems"
+        slug:
+          type: string
+          example: "how-to-scale-event-driven-systems"
+        summary:
+          type: string
+          example: "We explore patterns like CQRS, outbox, and Kafka-based fanout..."
+        coverImage:
+          type: string
+          format: uri
+          example: "https://cdn.example.com/posts/scaling.png"
+        status:
+          $ref: '#/components/schemas/PostStatus'
+        publishedAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+
+    PagePostSummaryView:
+      type: object
+      required: [content, page, size, totalElements, totalPages]
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostSummaryView'
+        page:
+          type: integer
+          example: 0
+        size:
+          type: integer
+          example: 20
+        totalElements:
+          type: integer
+          format: int64
+          example: 128
+        totalPages:
+          type: integer
+          example: 7
+
+    PostDetailView:
+      type: object
+      required: [id, title, slug, summary, body, category, tags, status, createdAt]
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        slug:
+          type: string
+        summary:
+          type: string
+        body:
+          type: string
+          description: Markdown body
+        category:
+          $ref: '#/components/schemas/PostDetailViewCategory'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostDetailViewTag'
+        coverImage:
+          type:
+            - string
+            - "null"
+          format: uri
+        status:
+          $ref: '#/components/schemas/PostStatus'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+        publishedAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+        archivedAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+
+    CreatePostRequest:
+      type: object
+      required: [title, summary, body, categoryId, tagIds, coverImage]
+      properties:
+        title:
+          type: string
+          example: "Observability for JVM services"
+        summary:
+          type: string
+          example: "A practical intro to logs, metrics, and traces with OTel"
+        body:
+          type: string
+          description: Markdown body
+        categoryId:
+          type: string
+          example: "f53d4930-213b-46c7-8c8f-bf5eee66ab60"
+        tagIds:
+          type: array
+          items:
+            type: string
+          example: [ "d31ac0cf-7aa7-43f4-8269-e174d16d2daf", "d3d4f9a9-e4d1-4bfe-a335-362cd5d29a42" ]
+        coverImage:
+          type: string
+          format: uri
+          example: "https://cdn.example.com/posts/observability.png"
+
+    CreatePostResponse:
+      type: object
+      required: [id, status]
+      properties:
+        id:
+          type: string
+          example: "216b65cb-ad60-42e7-ae69-67cf4ad0b648"
+        status:
+          $ref: '#/components/schemas/PostStatus'
+
+    UpdatePostRequest:
+      type: object
+      required: [title, summary, body, categoryId, tagIds, coverImage]
+      properties:
+        title:
+          type: string
+        summary:
+          type: string
+        body:
+          type: string
+        categoryId:
+          type: string
+        tagIds:
+          type: array
+          items:
+            type: string
+        coverImage:
+          type: string
+          format: uri
+
+
+    # ------------------------
+    # AUTHOR PROFILE
+    # ------------------------
+    AuthorProfileView:
+      type: object
+      required: [authorId, bio, avatar, createdAt]
+      properties:
+        authorId:
+          type: string
+          example: "70784ef4-6fcf-486b-8de1-066d2499ced9"
+        bio:
+          type: string
+          description: Markdown bio
+        avatar:
+          type: string
+          format: uri
+          example: "https://cdn.example.com/authors/luis.png"
+        resumeUrl:
+          type:
+            - string
+            - "null"
+          format: uri
+        portfolioUrl:
+          type:
+            - string
+            - "null"
+          format: uri
+        socialLinks:
+          type: array
+          items:
+            $ref: '#/components/schemas/SocialLink'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+
+    UpdateAuthorProfileRequest:
+      type: object
+      required: [bio, avatar]
+      properties:
+        bio:
+          type: string
+        avatar:
+          type: string
+          format: uri
+        resumeUrl:
+          type:
+            - string
+            - "null"
+          format: uri
+        portfolioUrl:
+          type:
+            - string
+            - "null"
+          format: uri
+        socialLinks:
+          type: array
+          items:
+            $ref: '#/components/schemas/SocialLink'
+
+    SocialLink:
+      type: object
+      required: [platform, url]
+      properties:
+        platform:
+          type: string
+          example: "linkedin"
+        url:
+          type: string
+          format: uri
+          example: "https://linkedin.com/in/jhondoe"
+
+    PostDetailViewCategory:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+          example: "d29aa2e4-09fe-4569-b60d-12e941169487"
+        name:
+          type: string
+          example: "Java"
+
+    PostDetailViewTag:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+          example: "4d69053d-0c7e-443b-b620-5764b3788912"
+        name:
+          type: string
+          example: "Core Java"
+    # ------------------------
+    # ERRORS
+    # ------------------------
+    ApiErrorResponse:
+      type: object
+      properties:
+        timestamp: { type: string, format: date-time }
+        status: { type: integer, example: 400 }
+        error: { type: string, example: "BAD_REQUEST" }
+        message: { type: string, example: "Validation failed for request body." }
+        path: { type: string, example: "/api/admin/path" }
+        traceId: { type: string, example: "dbd2ebb9-f737-40e3-9cb4-ce1ec2b229f5" }
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              field: { type: string }
+              message: { type: string }
