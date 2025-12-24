@@ -1,0 +1,33 @@
+meta {
+  name: CreatePost
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/api/admin/posts
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{BEARER_TOKEN}}
+}
+
+body:json {
+  {
+    "title": "Observability for JVM services",
+    "summary": "A practical intro to logs, metrics, and traces with OTel",
+    "body": "aaaaaaaaaaaaaaaaabbbbbbbbbbbbcdddddddddddd",
+    "categoryId": "87c206de-bcfe-4c7b-b7e8-3b49f3915ac9",
+    "tagIds": [
+      "8c32baba-567c-4d2f-83a3-2a0babb73daa"
+    ],
+    "coverImage": "https://cdn.example.com/posts/observability.png"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

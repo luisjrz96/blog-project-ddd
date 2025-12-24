@@ -1,0 +1,20 @@
+meta {
+  name: ArchiveTag
+  type: http
+  seq: 1
+}
+
+delete {
+  url: http://localhost:8080/api/admin/tags/bae8415c-39d3-4238-a7d4-32039230e547
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{BEARER_TOKEN}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

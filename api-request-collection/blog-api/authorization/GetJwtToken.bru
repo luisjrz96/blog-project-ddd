@@ -1,0 +1,35 @@
+meta {
+  name: GetJwtToken
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://auth.localtest.me:8081/realms/blogrealm/protocol/openid-connect/token
+  body: none
+  auth: oauth2
+}
+
+auth:oauth2 {
+  grant_type: authorization_code
+  callback_url: http://blog-api:8080/callback
+  authorization_url: http://auth.localtest.me:8081/realms/blogrealm/protocol/openid-connect/auth
+  access_token_url: http://auth.localtest.me:8081/realms/blogrealm/protocol/openid-connect/token
+  refresh_token_url: 
+  client_id: blog-api
+  client_secret: 
+  scope: 
+  state: 
+  pkce: true
+  credentials_placement: body
+  credentials_id: credentials
+  token_placement: header
+  token_header_prefix: Bearer
+  auto_fetch_token: true
+  auto_refresh_token: false
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,20 @@
+meta {
+  name: ArchiveCategoryById
+  type: http
+  seq: 2
+}
+
+delete {
+  url: http://localhost:8080/api/admin/categories/6fe5ca7a-7b41-447f-bcc3-8c99e6da6b29
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{BEARER_TOKEN}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

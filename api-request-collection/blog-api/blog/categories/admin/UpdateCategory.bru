@@ -1,0 +1,27 @@
+meta {
+  name: UpdateCategory
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:8080/api/admin/categories/891ae7e7-96aa-40aa-a1d4-a80ce09757b1
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{BEARER_TOKEN}}
+}
+
+body:json {
+  {
+    "name": "CDEF",
+    "defaultImage": "https://blog.com/images/cdef.jpg"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
