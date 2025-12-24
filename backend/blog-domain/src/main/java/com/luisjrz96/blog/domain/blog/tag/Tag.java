@@ -22,8 +22,7 @@ public class Tag extends AggregateRoot {
   public static Tag create(TagName name) {
     Tag tag = new Tag();
     Instant now = Instant.now();
-    tag.applyChange(
-        new TagCreated(TagId.newId(), name, new Slug(name.value()), TagStatus.ACTIVE, now));
+    tag.applyChange(new TagCreated(TagId.newId(), name, new Slug(name.value()), now));
     return tag;
   }
 
@@ -54,7 +53,7 @@ public class Tag extends AggregateRoot {
     this.id = e.id();
     this.name = e.name();
     this.slug = e.slug();
-    this.status = e.status();
+    this.status = TagStatus.ACTIVE;
     this.createdAt = e.createdAt();
   }
 

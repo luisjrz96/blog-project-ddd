@@ -107,7 +107,7 @@ class PostTest {
     assertEquals(title, created.title());
     assertEquals(summary, created.summary());
     assertEquals(body, created.body());
-    assertEquals(PostStatus.DRAFT, created.status());
+    assertEquals(PostStatus.DRAFT, post.getStatus());
     assertEquals(categoryId, created.categoryId());
     assertEquals(tagIds, created.tagIds());
     assertEquals(cover, created.coverImage());
@@ -360,7 +360,6 @@ class PostTest {
             initialSlug,
             initialSummary,
             initialBody,
-            PostStatus.DRAFT,
             initialCategory,
             initialTags,
             initialCover,

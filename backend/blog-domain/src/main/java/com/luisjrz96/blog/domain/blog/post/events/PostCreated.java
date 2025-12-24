@@ -7,7 +7,6 @@ import com.luisjrz96.blog.domain.DomainEvent;
 import com.luisjrz96.blog.domain.blog.category.CategoryId;
 import com.luisjrz96.blog.domain.blog.post.Markdown;
 import com.luisjrz96.blog.domain.blog.post.PostId;
-import com.luisjrz96.blog.domain.blog.post.PostStatus;
 import com.luisjrz96.blog.domain.blog.tag.TagId;
 import com.luisjrz96.blog.domain.shared.AuthorId;
 import com.luisjrz96.blog.domain.shared.ImageUrl;
@@ -22,7 +21,6 @@ public record PostCreated(
     Slug slug,
     Summary summary,
     Markdown body,
-    PostStatus status,
     CategoryId categoryId,
     List<TagId> tagIds,
     ImageUrl coverImage,

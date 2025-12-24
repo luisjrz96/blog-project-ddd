@@ -49,7 +49,7 @@ public class Post extends AggregateRoot {
     this.categoryId = e.categoryId();
     this.tagIds = new ArrayList<>(e.tagIds());
     this.coverImage = e.coverImage();
-    this.status = e.status();
+    this.status = PostStatus.DRAFT;
     this.createdAt = e.createdAt();
   }
 
@@ -105,7 +105,6 @@ public class Post extends AggregateRoot {
             new Slug(title.value()),
             summary,
             body,
-            PostStatus.DRAFT,
             categoryId,
             tagIds,
             coverImage,

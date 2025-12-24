@@ -26,12 +26,7 @@ public class Category extends AggregateRoot {
     Instant now = Instant.now();
     category.applyChange(
         new CategoryCreated(
-            CategoryId.newId(),
-            categoryName,
-            new Slug(categoryName.value()),
-            defaultImage,
-            CategoryStatus.ACTIVE,
-            now));
+            CategoryId.newId(), categoryName, new Slug(categoryName.value()), defaultImage, now));
     return category;
   }
 
@@ -65,7 +60,7 @@ public class Category extends AggregateRoot {
     this.name = e.name();
     this.defaultImage = e.defaultImage();
     this.slug = e.slug();
-    this.status = e.status();
+    this.status = CategoryStatus.ACTIVE;
     this.createdAt = e.createdAt();
   }
 

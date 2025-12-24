@@ -51,7 +51,7 @@ class TagTest {
     assertEquals(tag.getId(), created.id());
     assertEquals(name, created.name());
     assertEquals(new Slug(name.value()), created.slug());
-    assertEquals(TagStatus.ACTIVE, created.status());
+    assertEquals(TagStatus.ACTIVE, tag.getStatus());
     assertNotNull(created.createdAt(), "TagCreated should carry createdAt timestamp");
   }
 
@@ -129,8 +129,7 @@ class TagTest {
     Slug originalSlug = new Slug(originalName.value());
     Instant createdAt = Instant.parse("2025-10-24T10:00:00Z");
 
-    TagCreated created =
-        new TagCreated(id, originalName, originalSlug, TagStatus.ACTIVE, createdAt);
+    TagCreated created = new TagCreated(id, originalName, originalSlug, createdAt);
 
     TagName renamed = tagName("architecture");
     Slug renamedSlug = new Slug(renamed.value());

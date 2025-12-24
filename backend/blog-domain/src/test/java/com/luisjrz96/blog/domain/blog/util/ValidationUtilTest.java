@@ -5,15 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.jupiter.api.Test;
+import java.util.stream.Stream;
 
-import com.luisjrz96.blog.domain.exception.DomainException;
-import com.luisjrz96.blog.domain.util.ValidationUtil;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.stream.Stream;
+import com.luisjrz96.blog.domain.exception.DomainException;
+import com.luisjrz96.blog.domain.util.ValidationUtil;
 
 class ValidationUtilTest {
 
@@ -49,20 +49,17 @@ class ValidationUtilTest {
   @MethodSource("invalidStrings")
   void notNullAndNonBlank_throwsWhenInvalid(String value, String message) {
     DomainException ex =
-            assertThrows(
-                    DomainException.class,
-                    () -> ValidationUtil.notNullAndNonBlank(value, message)
-            );
+        assertThrows(
+            DomainException.class, () -> ValidationUtil.notNullAndNonBlank(value, message));
 
     assertEquals(message, ex.getMessage());
   }
 
   static Stream<Arguments> invalidStrings() {
     return Stream.of(
-            Arguments.of(null, "bio cannot be null or blank"),
-            Arguments.of("", "title cannot be empty"),
-            Arguments.of("   \t  ", "slug cannot be blank")
-    );
+        Arguments.of(null, "bio cannot be null or blank"),
+        Arguments.of("", "title cannot be empty"),
+        Arguments.of("   \t  ", "slug cannot be blank"));
   }
 
   // --- maxLength ---

@@ -61,7 +61,7 @@ class CategoryTest {
     assertEquals(catName, created.name());
     assertEquals(defaultImage, created.defaultImage());
     assertEquals(new Slug(catName.value()), created.slug());
-    assertEquals(CategoryStatus.ACTIVE, created.status());
+    assertEquals(CategoryStatus.ACTIVE, category.getStatus());
     assertNotNull(created.createdAt(), "CategoryCreated should carry createdAt timestamp");
   }
 
@@ -152,8 +152,7 @@ class CategoryTest {
     Instant createdAt = Instant.parse("2025-10-24T10:00:00Z");
 
     CategoryCreated created =
-        new CategoryCreated(
-            id, originalName, originalSlug, originalImage, CategoryStatus.ACTIVE, createdAt);
+        new CategoryCreated(id, originalName, originalSlug, originalImage, createdAt);
 
     CategoryName renamed = name("Platform Engineering");
     ImageUrl newImage = img("https://cdn.example.com/platform.png");
