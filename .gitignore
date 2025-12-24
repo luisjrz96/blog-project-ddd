@@ -1,1 +1,4 @@
 .data
+observability/grafana/data
+
+observability/loki/loki-data
