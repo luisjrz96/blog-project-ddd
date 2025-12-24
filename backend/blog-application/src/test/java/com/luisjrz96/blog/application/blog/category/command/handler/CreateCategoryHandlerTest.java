@@ -38,13 +38,12 @@ class CreateCategoryHandlerTest {
     UserProvider userProvider = mock(UserProvider.class);
     TransactionalExecutor tx = mock(TransactionalExecutor.class);
 
-    Actor admin = new Actor("admin-user", Set.of(Role.ADMIN));
+    Actor admin = new Actor("admin-user", Set.of(Role.ROLE_ADMIN.name()));
     when(userProvider.getCurrentUser()).thenReturn(admin);
     when(tx.executeInTransaction(any()))
         .thenAnswer(
             invocation -> {
-              @SuppressWarnings("unchecked")
-              Supplier<?> supplier = (Supplier<?>) invocation.getArgument(0);
+              Supplier<?> supplier = invocation.getArgument(0);
               return supplier.get();
             });
 
@@ -75,7 +74,7 @@ class CreateCategoryHandlerTest {
   }
 
   @Test
-  void handle_shouldThrow_whenActorIsNotAdmin() {
+  void handle_shouldThrowException_whenActorIsNotAdmin() {
     // given
     CategoryRepository repo = mock(CategoryRepository.class);
     UserProvider userProvider = mock(UserProvider.class);
@@ -86,8 +85,7 @@ class CreateCategoryHandlerTest {
     when(tx.executeInTransaction(any()))
         .thenAnswer(
             invocation -> {
-              @SuppressWarnings("unchecked")
-              Supplier<?> supplier = (Supplier<?>) invocation.getArgument(0);
+              Supplier<?> supplier = invocation.getArgument(0);
               return supplier.get();
             });
 

@@ -26,10 +26,10 @@ import com.luisjrz96.blog.application.shared.tx.TransactionalExecutor;
 import com.luisjrz96.blog.domain.blog.category.Category;
 import com.luisjrz96.blog.domain.blog.category.CategoryId;
 
-public class ArchiveCategoryHandlerTest {
+class ArchiveCategoryHandlerTest {
 
   @Test
-  void handle_shouldLoadArchiveAndSave_whenActorIsAdmin() {
+  void handle_shouldLoadArchiveAndSaveCategory_whenActorIsAdmin() {
     // given
     CategoryRepository repo = mock(CategoryRepository.class);
     UserProvider userProvider = mock(UserProvider.class);
@@ -40,12 +40,11 @@ public class ArchiveCategoryHandlerTest {
     CategoryId id = new CategoryId(UUID.randomUUID());
     ArchiveCategoryCommand cmd = new ArchiveCategoryCommand(id);
 
-    Actor admin = new Actor("admin-user", Set.of(Role.ADMIN));
+    Actor admin = new Actor("admin-user", Set.of(Role.ROLE_ADMIN.name()));
     when(tx.executeInTransaction(any()))
         .thenAnswer(
             invocation -> {
-              @SuppressWarnings("unchecked")
-              Supplier<?> supplier = (Supplier<?>) invocation.getArgument(0);
+              Supplier<?> supplier = invocation.getArgument(0);
               return supplier.get();
             });
 
@@ -66,7 +65,7 @@ public class ArchiveCategoryHandlerTest {
   }
 
   @Test
-  void handle_shouldThrowAndNotSave_whenActorNotAdmin() {
+  void handle_shouldThrowAndNotSaveCategory_whenActorNotAdmin() {
     // given
     CategoryRepository repo = mock(CategoryRepository.class);
     UserProvider userProvider = mock(UserProvider.class);
@@ -81,8 +80,7 @@ public class ArchiveCategoryHandlerTest {
     when(tx.executeInTransaction(any()))
         .thenAnswer(
             invocation -> {
-              @SuppressWarnings("unchecked")
-              Supplier<?> supplier = (Supplier<?>) invocation.getArgument(0);
+              Supplier<?> supplier = invocation.getArgument(0);
               return supplier.get();
             });
 

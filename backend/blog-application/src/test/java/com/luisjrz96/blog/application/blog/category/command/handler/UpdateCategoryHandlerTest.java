@@ -28,10 +28,10 @@ import com.luisjrz96.blog.domain.blog.category.CategoryId;
 import com.luisjrz96.blog.domain.blog.category.CategoryName;
 import com.luisjrz96.blog.domain.shared.ImageUrl;
 
-public class UpdateCategoryHandlerTest {
+class UpdateCategoryHandlerTest {
 
   @Test
-  void handle_shouldLoadUpdateAndSave_whenActorIsAdmin() {
+  void handle_shouldLoadUpdateAndSaveCategory_whenActorIsAdmin() {
     // given
     CategoryRepository repo = mock(CategoryRepository.class);
     UserProvider userProvider = mock(UserProvider.class);
@@ -44,13 +44,12 @@ public class UpdateCategoryHandlerTest {
 
     var cmd = new UpdateCategoryCommand(id, newName, newImage);
 
-    Actor admin = new Actor("admin-user", Set.of(Role.ADMIN));
+    Actor admin = new Actor("admin-user", Set.of(Role.ROLE_ADMIN.name()));
     when(userProvider.getCurrentUser()).thenReturn(admin);
     when(tx.executeInTransaction(any()))
         .thenAnswer(
             invocation -> {
-              @SuppressWarnings("unchecked")
-              Supplier<?> supplier = (Supplier<?>) invocation.getArgument(0);
+              Supplier<?> supplier = invocation.getArgument(0);
               return supplier.get();
             });
 
@@ -69,7 +68,7 @@ public class UpdateCategoryHandlerTest {
   }
 
   @Test
-  void handle_shouldThrowAndNotSave_whenActorIsNotAdmin() {
+  void handle_shouldThrowAndNotSaveCategory_whenActorIsNotAdmin() {
     // given
     CategoryRepository repo = mock(CategoryRepository.class);
     UserProvider userProvider = mock(UserProvider.class);
@@ -87,8 +86,7 @@ public class UpdateCategoryHandlerTest {
     when(tx.executeInTransaction(any()))
         .thenAnswer(
             invocation -> {
-              @SuppressWarnings("unchecked")
-              Supplier<?> supplier = (Supplier<?>) invocation.getArgument(0);
+              Supplier<?> supplier = invocation.getArgument(0);
               return supplier.get();
             });
 

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ import com.luisjrz96.blog.domain.blog.category.CategoryStatus;
 import com.luisjrz96.blog.domain.shared.ImageUrl;
 import com.luisjrz96.blog.domain.shared.Slug;
 
-public class GetCategoryByIdHandlerTest {
+class GetCategoryByIdHandlerTest {
 
   @Test
   void handle_shouldReturnCategoryViewDtoFromReader() {
@@ -43,7 +44,7 @@ public class GetCategoryByIdHandlerTest {
             null,
             null);
 
-    when(reader.getById(id)).thenReturn(dto);
+    when(reader.getById(id)).thenReturn(Optional.of(dto));
 
     // when
     CategoryViewDto result = handler.handle(query);
