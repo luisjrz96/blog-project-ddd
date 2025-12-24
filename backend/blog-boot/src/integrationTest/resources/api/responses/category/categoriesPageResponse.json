@@ -1,0 +1,35 @@
+{
+  "content": [
+    {
+      "id": "f371dd2f-875e-44fe-9aa7-d74a75259da6",
+      "name": "Programming",
+      "slug": "programming",
+      "defaultImage": "https://picsum.photos/seed/programming/1200/601.jpg",
+      "status": "ACTIVE",
+      "createdAt": "2025-01-01T00:00:00Z",
+      "updatedAt": "2025-01-01T00:00:00Z"
+    },
+    {
+      "id": "4641a729-e5f2-45d9-bace-7a6bc696929d",
+      "name": "DevOps",
+      "slug": "devops",
+      "defaultImage": "https://picsum.photos/seed/devops/1200/602.png",
+      "status": "ACTIVE",
+      "createdAt": "2025-01-01T00:00:00Z",
+      "updatedAt": "2025-01-01T00:00:00Z"
+    },
+    {
+      "id": "67c68122-c3d5-4bfe-9d6b-47937b43f4b9",
+      "name": "Architecture",
+      "slug": "architecture",
+      "defaultImage": "https://picsum.photos/seed/devops/1200/603.jpg",
+      "status": "ACTIVE",
+      "createdAt": "2025-01-01T00:00:00Z",
+      "updatedAt": "2025-01-01T00:00:00Z"
+    }
+  ],
+  "page": 0,
+  "size": 20,
+  "totalElements": 3,
+  "totalPages": 1
+}

@@ -1,0 +1,23 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  jpa:
+    hibernate:
+      ddl-auto: ${HIBERNATE_DDL_AUTO:validate}
+    properties:
+      hibernate:
+        format_sql: ${HIBERNATE_FORMAT_SQL:false}
+
+flyway:
+  enabled: ${FLYWAY_ENABLED:true}
+
+management:
+  tracing:
+    sampling:
+      probability: ${TRACING_SAMPLING_PROBABILITY:0.05}
+
+logging:
+  level:
+    root: ${LOG_LEVEL_ROOT:INFO}

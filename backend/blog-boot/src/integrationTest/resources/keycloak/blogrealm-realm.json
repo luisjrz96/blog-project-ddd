@@ -1,0 +1,42 @@
+{
+  "realm": "blogrealm",
+  "enabled": true,
+
+  "verifyEmail": false,
+  "registrationAllowed": false,
+  "resetPasswordAllowed": false,
+  "loginWithEmailAllowed": false,
+  "duplicateEmailsAllowed": true,
+
+  "roles": {
+    "realm": [
+      { "name": "ADMIN" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "blog-api",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": false,
+      "serviceAccountsEnabled": false
+    }
+  ],
+  "users": [
+    {
+      "id": "ce76ed46-d92b-43e5-8170-f64557bb1e7a",
+      "username": "luis",
+      "email": "luis@local.test",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Luis",
+      "lastName": "Juarez",
+      "credentials": [
+        { "type": "password", "value": "luispass", "temporary": false }
+      ],
+      "requiredActions": [],
+      "realmRoles": ["ADMIN"]
+    }
+  ]
+}

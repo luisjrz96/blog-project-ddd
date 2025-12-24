@@ -1,0 +1,9 @@
+{
+  "id": "f371dd2f-875e-44fe-9aa7-d74a75259da6",
+  "name": "Programming",
+  "slug": "programming",
+  "defaultImage": "https://picsum.photos/seed/programming/1200/601.jpg",
+  "status": "ACTIVE",
+  "createdAt": "2025-01-01T00:00:00Z",
+  "updatedAt": "2025-01-01T00:00:00Z"
+}

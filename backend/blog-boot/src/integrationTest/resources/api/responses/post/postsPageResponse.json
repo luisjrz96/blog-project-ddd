@@ -1,0 +1,17 @@
+{
+  "content": [
+    {
+      "id": "df7118ec-d81f-453b-b57f-130b38b388a9",
+      "title": "Java Lambdas",
+      "slug": "java-lambdas",
+      "summary": "Learning Java Lambdas",
+      "coverImage": "https://postimages/image1.jpg",
+      "status": "PUBLISHED",
+      "publishedAt": "2025-01-01T00:00:00Z"
+    }
+  ],
+  "page": 0,
+  "size": 20,
+  "totalElements": 1,
+  "totalPages": 1
+}

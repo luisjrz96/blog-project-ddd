@@ -1,0 +1,22 @@
+{
+  "id": "df7118ec-d81f-453b-b57f-130b38b388a9",
+  "title": "Java Lambdas",
+  "slug": "java-lambdas",
+  "summary": "Learning Java Lambdas",
+  "body": "Java Lambdas were introduced in Java 8 ...",
+  "category": {
+    "id": "f371dd2f-875e-44fe-9aa7-d74a75259da6",
+    "name": "Programming"
+  },
+  "tags": [
+    {
+      "id": "7e6f6b8a-2c3d-4b4a-9f9c-1a2b3c4d5e6f",
+      "name": "Java"
+    }
+  ],
+  "coverImage": "https://postimages/image1.jpg",
+  "status": "PUBLISHED",
+  "createdAt": "2025-01-01T00:00:00Z",
+  "updatedAt": "2025-01-01T00:00:00Z",
+  "publishedAt": "2025-01-01T00:00:00Z"
+}
