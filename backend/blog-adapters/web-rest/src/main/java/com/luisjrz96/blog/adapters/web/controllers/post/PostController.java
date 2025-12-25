@@ -43,18 +43,6 @@ public class PostController implements PostsApi {
   }
 
   @Override
-  public ResponseEntity<PagePostSummaryView> adminGetPostPage(
-      PostStatus status, Integer page, Integer size, String categoryId, String tagId) {
-    PostStatus postStatus = status != null ? status : PostStatus.PUBLISHED;
-    var query =
-        new PostsPageQuery(
-            com.luisjrz96.blog.domain.blog.post.PostStatus.valueOf(postStatus.name()),
-            PageRequest.of(page, size));
-    var pageData = postService.getPage(query);
-    return ResponseEntity.ok(toPageView(pageData));
-  }
-
-  @Override
   public ResponseEntity<Void> adminArchivePost(String id) {
     var cmd = new ArchivePostCommand(new PostId(UUID.fromString(id)));
     postService.archive(cmd);
@@ -64,6 +52,18 @@ public class PostController implements PostsApi {
   @Override
   public ResponseEntity<PostDetailView> adminGetPost(String id) {
     return this.getPost(id);
+  }
+
+  @Override
+  public ResponseEntity<PagePostSummaryView> adminGetPostPage(
+      Integer page, Integer size, String categoryId, String tagId, PostStatus status) {
+    PostStatus postStatus = status != null ? status : PostStatus.PUBLISHED;
+    var query =
+        new PostsPageQuery(
+            com.luisjrz96.blog.domain.blog.post.PostStatus.valueOf(postStatus.name()),
+            PageRequest.of(page, size));
+    var pageData = postService.getPage(query);
+    return ResponseEntity.ok(toPageView(pageData));
   }
 
   @Override

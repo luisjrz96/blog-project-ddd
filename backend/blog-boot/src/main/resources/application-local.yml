@@ -8,7 +8,7 @@ spring:
       ddl-auto: ${HIBERNATE_DDL_AUTO:update}
     properties:
       hibernate:
-        format_sql: ${HIBERNATE_FORMAT_SQL:true}
+        format_sql: ${HIBERNATE_FORMAT_SQL:false}
 
 management:
   tracing:
@@ -18,4 +18,3 @@ management:
 logging:
   level:
     root: ${LOG_LEVEL_ROOT:INFO}
-    org.hibernate.SQL: ${HIBERNATE_SQL_LOG:DEBUG}

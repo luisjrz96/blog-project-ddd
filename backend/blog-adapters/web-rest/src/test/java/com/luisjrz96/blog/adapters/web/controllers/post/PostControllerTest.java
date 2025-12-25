@@ -58,7 +58,7 @@ class PostControllerTest {
     when(mapper.toSummaryViewList(any())).thenReturn(Collections.emptyList());
 
     ResponseEntity<PagePostSummaryView> resp =
-        controller.adminGetPostPage(PostStatus.PUBLISHED, 0, 10, null, null);
+        controller.adminGetPostPage(0, 10, null, null, PostStatus.PUBLISHED);
 
     assertEquals(HttpStatus.OK, resp.getStatusCode());
     verify(postService, times(1)).getPage(any());
