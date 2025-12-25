@@ -103,7 +103,7 @@ paths:
       summary: List categories (admin only)
       description: Returns paginated list of categories.
       security:
-        - basicAuth: [ ]
+        - AdminAuth: [ ]
       parameters:
         - in: query
           name: page
@@ -156,7 +156,7 @@ paths:
       summary: Create a category (admin only)
       description: Creates a new category. Requires role ADMIN.
       security:
-        - basicAuth: [ ]
+        - AdminAuth: [ ]
       requestBody:
         required: true
         content:
@@ -188,7 +188,7 @@ paths:
       tags: [ Categories ]
       summary: Get category by id (admin only)
       security:
-        - basicAuth: [ ]
+        - AdminAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -228,7 +228,7 @@ paths:
       summary: Update a category (admin only)
       description: Update name, image, etc. Requires role ADMIN.
       security:
-        - basicAuth: [ ]
+        - AdminAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -276,7 +276,7 @@ paths:
       summary: Archive a category (admin only)
       description: Marks the category as ARCHIVED (soft delete). Requires role ADMIN.
       security:
-        - basicAuth: [ ]
+        - AdminAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -382,7 +382,7 @@ paths:
       tags: [ Tags ]
       summary: List tags (admin only)
       security:
-        - basicAuth: [ ]
+        - AdminAuth: [ ]
       parameters:
         - in: query
           name: page
@@ -435,7 +435,7 @@ paths:
       tags: [ Tags ]
       summary: Create a tag (admin only)
       security:
-        - basicAuth: [ ]
+        - AdminAuth: [ ]
       requestBody:
         required: true
         content:
@@ -473,7 +473,7 @@ paths:
       tags: [ Tags ]
       summary: List tags (admin only)
       security:
-        - basicAuth: []
+        - AdminAuth: []
       parameters:
         - in: path
           name: id
@@ -511,7 +511,7 @@ paths:
       tags: [ Tags ]
       summary: Update a tag (admin only)
       security:
-        - basicAuth: [ ]
+        - AdminAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -559,7 +559,7 @@ paths:
       summary: Archive a tag (admin only)
       description: Marks the tag as ARCHIVED.
       security:
-        - basicAuth: [ ]
+        - AdminAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -703,7 +703,7 @@ paths:
           required: false
         - in: query
           name: status
-          required: true
+          required: false
           schema:
             $ref: '#/components/schemas/PostStatus'
       responses:
@@ -737,7 +737,7 @@ paths:
       summary: Create a post (admin only)
       description: Creates a new post in DRAFT status.
       security:
-        - basicAuth: [ ]
+        - AdminAuth: [ ]
       requestBody:
         required: true
         content:
@@ -812,7 +812,7 @@ paths:
       tags: [ Posts ]
       summary: Update post content (admin only)
       security:
-        - basicAuth: [ ]
+        - AdminAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -860,7 +860,7 @@ paths:
       summary: Archive post (admin only)
       description: Sets status=ARCHIVED on the post aggregate.
       security:
-        - basicAuth: [ ]
+        - AdminAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -881,7 +881,7 @@ paths:
       summary: Publish post (admin only)
       description: Transition post from DRAFT to PUBLISHED.
       security:
-        - basicAuth: [ ]
+        - AdminAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -947,7 +947,7 @@ paths:
       tags: [ Authors ]
       summary: Update author profile (admin only)
       security:
-        - basicAuth: [ ]
+        - AdminAuth: [ ]
       parameters:
         - in: path
           name: id
