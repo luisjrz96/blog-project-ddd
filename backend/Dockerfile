@@ -46,29 +46,8 @@ RUN set -eux; \
   cat > /app/entrypoint.sh <<'SH'
 #!/usr/bin/env sh
 set -e
-
-if [ -n "${ENVIRONMENT:-}" ] && [ -z "${SPRING_PROFILES_ACTIVE:-}" ]; then
-  export SPRING_PROFILES_ACTIVE="$ENVIRONMENT"
-fi
-: "${SPRING_PROFILES_ACTIVE:=local}"
-
-# Mapear DATABASE_* a variables estándar de Spring Boot (si no están ya definidas)
-if [ -n "${DATABASE_URL:-}" ] && [ -z "${SPRING_DATASOURCE_URL:-}" ]; then
-  export SPRING_DATASOURCE_URL="$DATABASE_URL"
-fi
-if [ -n "${DATABASE_USERNAME:-}" ] && [ -z "${SPRING_DATASOURCE_USERNAME:-}" ]; then
-  export SPRING_DATASOURCE_USERNAME="$DATABASE_USERNAME"
-fi
-if [ -n "${DATABASE_PASSWORD:-}" ] && [ -z "${SPRING_DATASOURCE_PASSWORD:-}" ]; then
-  export SPRING_DATASOURCE_PASSWORD="$DATABASE_PASSWORD"
-fi
-if [ -n "${KEYCLOAK_URL:-}" ] && [ -z "${KEYCLOAK_URL:-}" ]; then
-  export KEYCLOAK_URL="$KEYCLOAK_URL"
-fi
-
 exec java -jar /app/app.jar
 SH
-
 RUN chmod +x /app/entrypoint.sh \
  && chown -R appuser:appuser /app
 
@@ -86,10 +65,5 @@ ENV OTEL_SERVICE_NAME="blog-api" \
     OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="http://otel-collector:4317" \
     OTEL_EXPORTER_OTLP_LOGS_PROTOCOL="http/protobuf" \
     OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="http://otel-collector:4318/v1/logs"
-
-ENV DATABASE_URL="" \
-    DATABASE_USER="" \
-    DATABASE_PASSWORD="" \
-    ENVIRONMENT=""
 
 ENTRYPOINT ["/app/entrypoint.sh"]
