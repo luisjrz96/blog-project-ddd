@@ -5,13 +5,17 @@ meta {
 }
 
 get {
-  url: http://localhost:8080/api/admin/posts?status=PUBLISHED
+  url: http://localhost:8080/api/admin/posts
   body: none
   auth: bearer
 }
 
 params:query {
-  status: PUBLISHED
+  ~page: 0
+  ~size: 20
+  ~status: PUBLISHED
+  ~status: DRAFT
+  ~status: ARCHIVED
 }
 
 auth:bearer {

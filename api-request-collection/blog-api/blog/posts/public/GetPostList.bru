@@ -5,9 +5,14 @@ meta {
 }
 
 get {
-  url: http://localhost:8080/api/posts
+  url: http://localhost:8080/api/posts?page=0&size=20
   body: none
   auth: inherit
+}
+
+params:query {
+  page: 0
+  size: 20
 }
 
 settings {
