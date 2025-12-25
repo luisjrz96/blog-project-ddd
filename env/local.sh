@@ -3,6 +3,8 @@
 # keycloak container env variables
 # if you want to change the values also change info in the file:
 # docker/init/postgres/01-create-db.sql
+export KC_BOOTSTRAP_ADMIN_USERNAME=admin
+export KC_BOOTSTRAP_ADMIN_PASSWORD=admin
 export KC_DB_USERNAME=keycloakuser
 export KC_DB_PASSWORD=keycloakpass
 # postgres container env variables

@@ -21,7 +21,8 @@
       image: quay.io/keycloak/keycloak:26.0
       command: ["start-dev", "--import-realm"]
       environment:
-        KEYCLOAK_ADMIN: admin
+        KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME}
+        KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD}
         KC_HTTP_ENABLED: "true"
         KC_PROXY: "edge"
         KC_HOSTNAME: "auth.localtest.me"
