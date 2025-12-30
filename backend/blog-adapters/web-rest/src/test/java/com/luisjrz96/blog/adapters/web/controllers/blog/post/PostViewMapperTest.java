@@ -16,6 +16,7 @@ import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
 import org.openapitools.jackson.nullable.JsonNullable;
 
+import com.luisjrz96.blog.adapters.web.controllers.blog.post.PostViewMapper;
 import com.luisjrz96.blog.adapters.web.dto.PostDetailView;
 import com.luisjrz96.blog.adapters.web.dto.PostDetailViewCategory;
 import com.luisjrz96.blog.adapters.web.dto.PostDetailViewTag;

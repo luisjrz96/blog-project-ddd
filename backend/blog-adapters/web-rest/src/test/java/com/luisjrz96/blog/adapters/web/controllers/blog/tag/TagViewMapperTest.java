@@ -1,4 +1,4 @@
-package com.luisjrz96.blog.adapters.web.controllers.category;
+package com.luisjrz96.blog.adapters.web.controllers.tag;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -15,13 +15,14 @@ import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
 import org.openapitools.jackson.nullable.JsonNullable;
 
-import com.luisjrz96.blog.adapters.web.dto.CategoryStatus;
-import com.luisjrz96.blog.adapters.web.dto.CategoryView;
-import com.luisjrz96.blog.application.blog.category.query.CategoryViewDto;
+import com.luisjrz96.blog.adapters.web.controllers.blog.tag.TagViewMapper;
+import com.luisjrz96.blog.adapters.web.dto.TagStatus;
+import com.luisjrz96.blog.adapters.web.dto.TagView;
+import com.luisjrz96.blog.application.blog.tag.query.TagViewDto;
 
-class CategoryViewMapperTest {
+class TagViewMapperTest {
 
-  private final CategoryViewMapper mapper = Mappers.getMapper(CategoryViewMapper.class);
+  private final TagViewMapper mapper = Mappers.getMapper(TagViewMapper.class);
 
   @Test
   void toOffsetDateTime_givenInstant_convertsToUtcOffsetDateTime() {
@@ -45,28 +46,25 @@ class CategoryViewMapperTest {
   }
 
   @Test
-  void toView_mapsAllFields_andConvertsInstantsToJsonNullable() {
-    UUID id = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+  void toView_mapsAllFields_andConvertsInstantsToOffsetDateTimeJsonNullable() {
+    UUID id = UUID.fromString("11111111-1111-1111-1111-111111111111");
     Instant created = Instant.parse("2023-01-02T03:04:05Z");
     Instant updated = Instant.parse("2024-02-03T04:05:06Z");
-    Instant archived = Instant.parse("2025-03-04T05:06:07Z");
 
-    CategoryViewDto dto = Mockito.mock(CategoryViewDto.class, Mockito.RETURNS_DEEP_STUBS);
+    TagViewDto dto = Mockito.mock(TagViewDto.class, Mockito.RETURNS_DEEP_STUBS);
     Mockito.when(dto.id().value()).thenReturn(id);
-    Mockito.when(dto.name().value()).thenReturn("category-name");
-    Mockito.when(dto.slug().value()).thenReturn("category-slug");
+    Mockito.when(dto.name().value()).thenReturn("tag-name");
+    Mockito.when(dto.slug().value()).thenReturn("tag-slug");
     Mockito.when(dto.status().name()).thenReturn("ACTIVE");
-    Mockito.when(dto.defaultImage().value()).thenReturn("http://example.com/image.png");
     Mockito.when(dto.createdAt()).thenReturn(created);
     Mockito.when(dto.updatedAt()).thenReturn(updated);
-    Mockito.when(dto.archivedAt()).thenReturn(archived);
 
-    CategoryView view = mapper.toView(dto);
+    TagView view = mapper.toView(dto);
 
     assertEquals(id.toString(), view.getId());
-    assertEquals("category-name", view.getName());
-    assertEquals("category-slug", view.getSlug());
-    assertEquals(CategoryStatus.fromValue(dto.status().name()), view.getStatus());
+    assertEquals("tag-name", view.getName());
+    assertEquals("tag-slug", view.getSlug());
+    assertEquals(TagStatus.ACTIVE, view.getStatus());
 
     OffsetDateTime createdOpt = view.getCreatedAt();
     JsonNullable<OffsetDateTime> updatedOpt = view.getUpdatedAt();
@@ -83,27 +81,26 @@ class CategoryViewMapperTest {
 
   @Test
   void toViewList_mapsList_ofDtos() {
-    UUID id = UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+    UUID id = UUID.fromString("22222222-2222-2222-2222-222222222222");
     Instant now = Instant.parse("2023-01-02T03:04:05Z");
 
-    CategoryViewDto dto = Mockito.mock(CategoryViewDto.class, Mockito.RETURNS_DEEP_STUBS);
+    TagViewDto dto = Mockito.mock(TagViewDto.class, Mockito.RETURNS_DEEP_STUBS);
     Mockito.when(dto.id().value()).thenReturn(id);
     Mockito.when(dto.name().value()).thenReturn("list-name");
     Mockito.when(dto.slug().value()).thenReturn("list-slug");
     Mockito.when(dto.status().name()).thenReturn("ACTIVE");
-    Mockito.when(dto.defaultImage().value()).thenReturn("http://example.com/list-image.png");
     Mockito.when(dto.createdAt()).thenReturn(now);
     Mockito.when(dto.updatedAt()).thenReturn(now);
 
-    List<CategoryView> result = mapper.toViewList(List.of(dto));
+    List<TagView> result = mapper.toViewList(List.of(dto));
 
     assertEquals(1, result.size());
-    CategoryView view = result.getFirst();
+    TagView view = result.getFirst();
 
     assertEquals(id.toString(), view.getId());
     assertEquals("list-name", view.getName());
     assertEquals("list-slug", view.getSlug());
-    assertEquals(CategoryStatus.fromValue(dto.status().name()), view.getStatus());
+    assertEquals(TagStatus.ACTIVE, view.getStatus());
     assertNotNull(view.getCreatedAt());
     assertEquals(OffsetDateTime.ofInstant(now, ZoneOffset.UTC), view.getCreatedAt());
   }

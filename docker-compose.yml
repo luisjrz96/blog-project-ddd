@@ -12,7 +12,6 @@
       ports:
         - "8081:80"
         - "8089:8080"
-        - "5432:5432"
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock:ro
       networks: [appnet]
@@ -57,12 +56,9 @@
       volumes:
         - ./.data/postgres:/var/lib/postgresql/data
         - ./docker/postgres/init:/docker-entrypoint-initdb.d
-      labels:
-        - traefik.enable=true
-        - traefik.tcp.routers.postgres.rule=HostSNI(`*`)
-        - traefik.tcp.routers.postgres.entrypoints=pg
-        - traefik.tcp.services.postgres.loadbalancer.server.port=5432
       networks: [appnet]
+      ports:
+        - "5432:5432"
 
     pgadmin:
       image: dpage/pgadmin4:8

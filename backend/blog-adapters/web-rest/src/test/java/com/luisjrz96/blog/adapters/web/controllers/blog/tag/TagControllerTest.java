@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.luisjrz96.blog.adapters.web.controllers.blog.tag.TagController;
+import com.luisjrz96.blog.adapters.web.controllers.blog.tag.TagViewMapper;
 import com.luisjrz96.blog.adapters.web.dto.CreateTagRequest;
 import com.luisjrz96.blog.adapters.web.dto.TagStatus;
 import com.luisjrz96.blog.adapters.web.dto.UpdateTagRequest;

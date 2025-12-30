@@ -18,6 +18,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.luisjrz96.blog.adapters.web.controllers.blog.category.CategoryController;
+import com.luisjrz96.blog.adapters.web.controllers.blog.category.CategoryViewMapper;
 import com.luisjrz96.blog.adapters.web.dto.CreateCategoryRequest;
 import com.luisjrz96.blog.adapters.web.dto.UpdateCategoryRequest;
 import com.luisjrz96.blog.application.blog.category.CategoryService;

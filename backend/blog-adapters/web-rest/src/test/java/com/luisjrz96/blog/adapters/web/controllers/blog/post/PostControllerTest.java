@@ -18,6 +18,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.luisjrz96.blog.adapters.web.controllers.blog.post.PostController;
+import com.luisjrz96.blog.adapters.web.controllers.blog.post.PostViewMapper;
 import com.luisjrz96.blog.adapters.web.dto.CreatePostRequest;
 import com.luisjrz96.blog.adapters.web.dto.PagePostSummaryView;
 import com.luisjrz96.blog.adapters.web.dto.PostDetailView;
