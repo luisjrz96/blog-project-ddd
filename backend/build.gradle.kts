@@ -1,5 +1,7 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
 import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
+import org.gradle.testing.jacoco.tasks.JacocoReport
 
 plugins {
 	id("java-library")
@@ -58,7 +60,6 @@ subprojects {
 			endWithNewline()
 		}
 	}
-
 }
 
 // Map subproject name -> list of exclude patterns for that subproject
@@ -84,28 +85,50 @@ val jacocoExcludesByProject: Map<String, List<String>> = mapOf(
 // common excludes applied to every subproject
 val commonExcludes = listOf("**/config/**", "**/internal/**")
 
-val jacocoRootReport = tasks.register("jacocoRootReport", JacocoReport::class) {
-	// ensure tests in subprojects run first
-	dependsOn(subprojects.flatMap { it.tasks.matching { t -> t.name == "test" } })
+// ---- helpers ----
 
-	// collect execution data from subprojects
-	executionData.setFrom(files(subprojects.map { file("${it.buildDir}/jacoco/test.exec") }))
+fun jacocoClassDirs() = subprojects.flatMap { sp ->
+	val projExcludes = jacocoExcludesByProject[sp.path].orEmpty()
+	val excludes = projExcludes + commonExcludes
 
-	// build classDirectories and apply per-project excludes plus common excludes
-	val classDirs = subprojects.map { sp ->
-		fileTree("${sp.buildDir}/classes/java/main") {
-			println("Project: ${sp.path}, excludes: ${jacocoExcludesByProject[sp.path]}")
+	listOf(
+		fileTree("${sp.buildDir}/classes/java/main") { exclude(excludes) },
+		fileTree("${sp.buildDir}/classes/kotlin/main") { exclude(excludes) }
+	)
+}
 
-			val projExcludes = jacocoExcludesByProject[sp.path].orEmpty()
-			exclude(projExcludes + commonExcludes)
-		}
+fun jacocoSourceDirs() = files(
+	subprojects.map { file("${it.projectDir}/src/main/java") } +
+			subprojects.map { file("${it.projectDir}/src/main/kotlin") }
+)
+
+fun JacocoReport.useExecutionDataFrom(testTasks: List<Test>) {
+	executionData.setFrom(
+		files(
+			testTasks.mapNotNull { t ->
+				t.extensions.findByType(JacocoTaskExtension::class.java)?.destinationFile
+			}
+		)
+	)
+}
+
+// ---- reports ----
+
+val jacocoRootUnitReport = tasks.register("jacocoRootUnitReport", JacocoReport::class) {
+	group = "verification"
+	description = "JaCoCo root report (unit tests only: test)."
+
+	val unitTests = subprojects.flatMap { sp ->
+		sp.tasks.withType<Test>()
+			.matching { it.name == "test" }
+			.toList()
 	}
-	classDirectories.setFrom(classDirs)
 
-	// collect source directories (java & kotlin)
-	sourceDirectories.setFrom(files(subprojects.map { file("${it.projectDir}/src/main/java") } +
-			subprojects.map { file("${it.projectDir}/src/main/kotlin") }))
+	dependsOn(unitTests)
+	useExecutionDataFrom(unitTests)
 
+	classDirectories.setFrom(jacocoClassDirs())
+	sourceDirectories.setFrom(jacocoSourceDirs())
 	additionalSourceDirs.setFrom(files(subprojects.map { file("${it.projectDir}/src/main/kotlin") }))
 
 	reports {
@@ -115,11 +138,31 @@ val jacocoRootReport = tasks.register("jacocoRootReport", JacocoReport::class) {
 	}
 }
 
-// Optional: make root report run with check
-tasks.named("check") {
-	dependsOn(jacocoRootReport)
+val jacocoRootAllReport = tasks.register("jacocoRootAllReport", JacocoReport::class) {
+	group = "verification"
+	description = "JaCoCo root report (unit + integration: test + integrationTest)."
+
+	val allTests = subprojects.flatMap { sp ->
+		sp.tasks.withType<Test>()
+			.matching { it.name == "test" || it.name == "integrationTest" }
+			.toList()
+	}
+
+	dependsOn(allTests)
+	useExecutionDataFrom(allTests)
+
+	classDirectories.setFrom(jacocoClassDirs())
+	sourceDirectories.setFrom(jacocoSourceDirs())
+	additionalSourceDirs.setFrom(files(subprojects.map { file("${it.projectDir}/src/main/kotlin") }))
+
+	reports {
+		xml.required.set(true)
+		html.required.set(true)
+		csv.required.set(false)
+	}
 }
 
-tasks.withType<Test> {
-	useJUnitPlatform()
+tasks.named("check") {
+	dependsOn(jacocoRootUnitReport)
+	dependsOn(jacocoRootAllReport)
 }
