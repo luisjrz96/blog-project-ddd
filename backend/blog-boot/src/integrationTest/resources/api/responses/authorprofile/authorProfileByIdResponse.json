@@ -1,4 +1,5 @@
 {
+  "authorId": "ce76ed46-d92b-43e5-8170-f64557bb1e7a",
   "bio": "Hello, I'm John. I like DDD and event sourcing.",
   "avatar": "https://cdn.example.com/authors/john.png",
   "resumeUrl": "https://cdn.example.com/authors/john-resume.pdf",
@@ -12,5 +13,7 @@
       "platform": "LINKEDIN",
       "url": "https://linkedin.com/in/john"
     }
-  ]
+  ],
+  "createdAt": "2025-01-01T00:00:00Z",
+  "updatedAt": "2025-01-01T00:00:00Z"
 }

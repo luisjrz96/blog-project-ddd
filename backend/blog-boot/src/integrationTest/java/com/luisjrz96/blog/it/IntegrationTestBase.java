@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -24,6 +25,8 @@ import org.testcontainers.utility.MountableFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Testcontainers
 public abstract class IntegrationTestBase {
@@ -31,7 +34,11 @@ public abstract class IntegrationTestBase {
   private static final HttpClient HTTP = HttpClient.newHttpClient();
   private static final ObjectMapper JSON = new ObjectMapper();
 
-  protected IntegrationTestBase() {}
+  protected IntegrationTestBase() {
+    JSON.registerModule(new JavaTimeModule());
+    JSON.registerModule(new JsonNullableModule());
+    JSON.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+  }
 
   @SuppressWarnings("resource")
   static final PostgreSQLContainer<?> postgres =
@@ -135,7 +142,7 @@ public abstract class IntegrationTestBase {
     return URLEncoder.encode(v, StandardCharsets.UTF_8);
   }
 
-  protected static JsonNode readJsonFromClasspath(String path) throws Exception {
+  protected static JsonNode readJsonFromClasspath(String path) throws IOException {
     var resource = new ClassPathResource(path);
     try (var in = resource.getInputStream()) {
       return JSON.readTree(in);
