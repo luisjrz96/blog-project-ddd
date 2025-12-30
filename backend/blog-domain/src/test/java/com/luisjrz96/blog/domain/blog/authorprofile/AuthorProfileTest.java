@@ -85,7 +85,7 @@ class AuthorProfileTest {
     assertEquals(bio, created.bio());
     assertEquals(avatar, created.avatar());
     assertEquals(resumeUrl, created.resumeUrl());
-    assertEquals(portfolioUrl, created.portafolioUrl());
+    assertEquals(portfolioUrl, created.portfolioUrl());
     assertEquals(links, created.socialLinks());
     assertNotNull(created.createdAt(), "AuthorProfileCreated should carry createdAt timestamp");
   }
@@ -146,7 +146,7 @@ class AuthorProfileTest {
     assertEquals(newBio, updated.bio());
     assertEquals(newAvatar, updated.avatar());
     assertEquals(newResume, updated.resumeUrl());
-    assertEquals(newPortfolio, updated.portafolioUrl());
+    assertEquals(newPortfolio, updated.portfolioUrl());
     assertEquals(newLinks, updated.socialLinks());
     assertEquals(beforeUpdate, updated.updatedAt());
   }
