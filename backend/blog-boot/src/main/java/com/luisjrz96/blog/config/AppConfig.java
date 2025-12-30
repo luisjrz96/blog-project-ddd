@@ -1,8 +1,18 @@
 package com.luisjrz96.blog.config;
 
+import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.luisjrz96.blog.application.blog.authorprofile.AuthorProfileService;
+import com.luisjrz96.blog.application.blog.authorprofile.command.handler.CreateAuthorProfileHandler;
+import com.luisjrz96.blog.application.blog.authorprofile.command.handler.UpdateAuthorProfileHandler;
+import com.luisjrz96.blog.application.blog.authorprofile.port.AuthorProfileRepository;
+import com.luisjrz96.blog.application.blog.authorprofile.port.AuthorProfileViewReader;
+import com.luisjrz96.blog.application.blog.authorprofile.query.handler.GetAuthorProfileByIdHandler;
 import com.luisjrz96.blog.application.blog.category.CategoryService;
 import com.luisjrz96.blog.application.blog.category.command.handler.ArchiveCategoryHandler;
 import com.luisjrz96.blog.application.blog.category.command.handler.CreateCategoryHandler;
@@ -81,6 +91,15 @@ public class AppConfig {
         publishPostHandler,
         getPostByIdHandler,
         getPostsPageHandler);
+  }
+
+  @Bean
+  public AuthorProfileService authorProfileService(
+      CreateAuthorProfileHandler createAuthorProfileHandler,
+      UpdateAuthorProfileHandler updateAuthorProfileHandler,
+      GetAuthorProfileByIdHandler getAuthorProfileByIdHandler) {
+    return new AuthorProfileService(
+        createAuthorProfileHandler, updateAuthorProfileHandler, getAuthorProfileByIdHandler);
   }
 
   @Bean
@@ -197,5 +216,31 @@ public class AppConfig {
   @Bean
   public GetPostsPageHandler getPostsPageHandler(PostViewReader postViewReader) {
     return new GetPostsPageHandler(postViewReader);
+  }
+
+  @Bean
+  public CreateAuthorProfileHandler createAuthorProfileHandler(
+      TransactionalExecutor tx, UserProvider userProvider, AuthorProfileRepository repository) {
+    return new CreateAuthorProfileHandler(tx, userProvider, repository);
+  }
+
+  @Bean
+  public UpdateAuthorProfileHandler updateAuthorProfileHandler(
+      TransactionalExecutor tx, UserProvider userProvider, AuthorProfileRepository repository) {
+    return new UpdateAuthorProfileHandler(tx, userProvider, repository);
+  }
+
+  @Bean
+  public GetAuthorProfileByIdHandler getAuthorProfileByIdHandler(AuthorProfileViewReader reader) {
+    return new GetAuthorProfileByIdHandler(reader);
+  }
+
+  @Bean
+  public ObjectMapper objectMapper() {
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.registerModule(new JavaTimeModule());
+    objectMapper.registerModule(new JsonNullableModule());
+    objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    return objectMapper;
   }
 }
