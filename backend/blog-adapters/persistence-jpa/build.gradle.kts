@@ -23,10 +23,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
+    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.14.1")
     runtimeOnly("org.postgresql:postgresql")
 
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-    implementation("org.openapitools:jackson-databind-nullable:0.2.8")
 
     compileOnly("org.projectlombok:lombok:$lombokVersion")
     annotationProcessor("org.projectlombok:lombok:$lombokVersion")
