@@ -18,11 +18,13 @@ In this application **ADMIN** can do operations to:
 - categories (create, update, archive, list categories pages, list a category).
 - tags (create, update, archive, list tag pages, list a tag).
 - posts (create, update, publish, archive, list posts page, list a post).
+- authorprofile (create, update).
 
 In this application **USER** can do operations to:
 - categories (list categories page, list a category).
 - tags (list tags page, list a tag).
 - posts (list posts page, list a post).
+- authorprofile (list a authorprofile).
 
 ## Steps to run the application
 
