@@ -7,12 +7,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.stereotype.Component;
 
 import com.luisjrz96.blog.application.shared.port.UserProvider;
 import com.luisjrz96.blog.application.shared.security.Actor;
 
-@Component
 public class KeycloakUserContextProvider implements UserProvider {
 
   @Override
