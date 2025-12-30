@@ -3,12 +3,10 @@ package com.luisjrz96.blog.adapters.persistence.eventstore;
 import java.io.IOException;
 import java.util.Map;
 
-import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.luisjrz96.blog.adapters.persistence.exception.EventSerializationException;
 import com.luisjrz96.blog.domain.DomainEvent;
 import com.luisjrz96.blog.domain.blog.authorprofile.events.AuthorProfileCreated;
@@ -32,8 +30,6 @@ public class JacksonDomainEventSerializer implements DomainEventSerializer {
 
   public JacksonDomainEventSerializer(ObjectMapper objectMapper) {
     this.objectMapper = objectMapper;
-    objectMapper.registerModule(new JavaTimeModule());
-    objectMapper.registerModule(new JsonNullableModule());
     this.registry =
         Map.ofEntries(
             Map.entry("CategoryCreated", CategoryCreated.class),

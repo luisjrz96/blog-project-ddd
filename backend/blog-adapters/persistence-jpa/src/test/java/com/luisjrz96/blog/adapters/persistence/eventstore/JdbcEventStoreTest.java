@@ -38,6 +38,9 @@ class JdbcEventStoreTest {
 
   @InjectMocks private JdbcEventStore eventStore;
 
+  @SuppressWarnings("unchecked")
+  RowMapper<VersionedEvent> rowMapper = (RowMapper<VersionedEvent>) any(RowMapper.class);
+
   @Test
   void testLoad_ShouldReturnListOfVersionedEvents() {
     // Given
@@ -49,7 +52,7 @@ class JdbcEventStoreTest {
     when(serializer.deserialize("CategoryCreated", "{\"categoryId\":\"category1\"}"))
         .thenReturn(domainEvent);
 
-    when(jdbcTemplate.query(anyString(), any(RowMapper.class), eq(aggregateId.toString())))
+    when(jdbcTemplate.query(anyString(), rowMapper, eq(aggregateId.toString())))
         .thenAnswer(
             invocation -> {
               RowMapper<VersionedEvent> mapper = invocation.getArgument(1);
@@ -80,7 +83,7 @@ class JdbcEventStoreTest {
     Object aggregateId = "category1";
 
     // Mock JdbcTemplate to return no rows (empty result set)
-    when(jdbcTemplate.query(anyString(), any(RowMapper.class), eq(aggregateId.toString())))
+    when(jdbcTemplate.query(anyString(), rowMapper, eq(aggregateId.toString())))
         .thenReturn(Collections.emptyList());
 
     // When
@@ -166,9 +169,7 @@ class JdbcEventStoreTest {
     IllegalArgumentException exception =
         assertThrows(
             IllegalArgumentException.class,
-            () -> {
-              eventStore.load(unknownAggregateType, aggregateId);
-            });
+            () -> eventStore.load(unknownAggregateType, aggregateId));
 
     assertTrue(exception.getMessage().contains("Unknown aggregateType Unknown"));
   }

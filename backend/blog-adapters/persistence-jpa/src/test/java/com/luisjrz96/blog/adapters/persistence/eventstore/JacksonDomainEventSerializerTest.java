@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.luisjrz96.blog.adapters.persistence.exception.EventSerializationException;
 import com.luisjrz96.blog.domain.DomainEvent;
 import com.luisjrz96.blog.domain.blog.category.CategoryId;
@@ -30,7 +31,7 @@ class JacksonDomainEventSerializerTest {
 
   @BeforeEach
   void setUp() {
-    objectMapper = spy(ObjectMapper.class);
+    objectMapper = spy(new ObjectMapper().registerModule(new JavaTimeModule()));
     serializer = new JacksonDomainEventSerializer(objectMapper);
   }
 

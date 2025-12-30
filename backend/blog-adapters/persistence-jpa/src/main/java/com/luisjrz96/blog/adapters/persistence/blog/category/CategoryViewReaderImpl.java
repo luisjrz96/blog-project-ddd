@@ -19,22 +19,21 @@ import com.luisjrz96.blog.domain.shared.Slug;
 @Service
 public class CategoryViewReaderImpl implements CategoryViewReader {
 
-  private final CategoryViewJpaRepository jpaRepository;
+  private final CategoryViewJpaRepository repository;
 
-  public CategoryViewReaderImpl(CategoryViewJpaRepository jpaRepository) {
-    this.jpaRepository = jpaRepository;
+  public CategoryViewReaderImpl(CategoryViewJpaRepository repository) {
+    this.repository = repository;
   }
 
   @Override
   public Optional<CategoryViewDto> getById(CategoryId id) {
-    Optional<CategoryViewEntity> entity = jpaRepository.findById(String.valueOf(id.value()));
+    Optional<CategoryViewEntity> entity = repository.findById(String.valueOf(id.value()));
     return entity.map(this::toDto);
   }
 
   @Override
   public Page<CategoryViewDto> getPage(PageRequest pageRequest) {
-    var page =
-        jpaRepository.findAll(Pageable.ofSize(pageRequest.size()).withPage(pageRequest.page()));
+    var page = repository.findAll(Pageable.ofSize(pageRequest.size()).withPage(pageRequest.page()));
     return new Page<>(
         page.stream().map(this::toDto).toList(),
         page.getTotalElements(),
@@ -45,7 +44,7 @@ public class CategoryViewReaderImpl implements CategoryViewReader {
   @Override
   public Page<CategoryViewDto> getPageWithStatus(CategoryStatus status, PageRequest pageRequest) {
     var page =
-        jpaRepository.findAllByStatus(
+        repository.findAllByStatus(
             String.valueOf(status),
             Pageable.ofSize(pageRequest.size()).withPage(pageRequest.page()));
     return new Page<>(
