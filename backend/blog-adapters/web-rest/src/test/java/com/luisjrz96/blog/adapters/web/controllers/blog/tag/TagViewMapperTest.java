@@ -1,4 +1,4 @@
-package com.luisjrz96.blog.adapters.web.controllers.tag;
+package com.luisjrz96.blog.adapters.web.controllers.blog.tag;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -15,7 +15,6 @@ import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
 import org.openapitools.jackson.nullable.JsonNullable;
 
-import com.luisjrz96.blog.adapters.web.controllers.blog.tag.TagViewMapper;
 import com.luisjrz96.blog.adapters.web.dto.TagStatus;
 import com.luisjrz96.blog.adapters.web.dto.TagView;
 import com.luisjrz96.blog.application.blog.tag.query.TagViewDto;

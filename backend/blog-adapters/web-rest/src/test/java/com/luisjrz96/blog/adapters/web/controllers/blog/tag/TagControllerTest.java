@@ -1,4 +1,4 @@
-package com.luisjrz96.blog.adapters.web.controllers.tag;
+package com.luisjrz96.blog.adapters.web.controllers.blog.tag;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -17,8 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.luisjrz96.blog.adapters.web.controllers.blog.tag.TagController;
-import com.luisjrz96.blog.adapters.web.controllers.blog.tag.TagViewMapper;
 import com.luisjrz96.blog.adapters.web.dto.CreateTagRequest;
 import com.luisjrz96.blog.adapters.web.dto.TagStatus;
 import com.luisjrz96.blog.adapters.web.dto.UpdateTagRequest;

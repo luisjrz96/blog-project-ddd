@@ -914,6 +914,7 @@ paths:
 
   /api/authors/{id}:
     get:
+      operationId: getAuthorProfile
       tags: [ Authors ]
       summary: Get author profile (public)
       parameters:
@@ -943,24 +944,59 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
 
-    put:
+  /api/authors:
+    post:
+      operationId: createAuthorProfile
       tags: [ Authors ]
-      summary: Update author profile (admin only)
+      summary: Create author profile (admin only)
       security:
         - AdminAuth: [ ]
-      parameters:
-        - in: path
-          name: id
-          required: true
-          description: Author ID
-          schema:
-            type: string
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateAuthorProfileRequest'
+              $ref: '#/components/schemas/AuthorProfileRequest'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+    put:
+      operationId: updateAuthorProfile
+      tags: [ Authors ]
+      summary: Update author profile (admin only)
+      security:
+        - AdminAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorProfileRequest'
       responses:
         '204':
           description: Updated
@@ -1366,12 +1402,10 @@ components:
         resumeUrl:
           type:
             - string
-            - "null"
           format: uri
         portfolioUrl:
           type:
             - string
-            - "null"
           format: uri
         socialLinks:
           type: array
@@ -1383,10 +1417,9 @@ components:
         updatedAt:
           type:
             - string
-            - "null"
           format: date-time
 
-    UpdateAuthorProfileRequest:
+    AuthorProfileRequest:
       type: object
       required: [bio, avatar]
       properties:
@@ -1398,12 +1431,10 @@ components:
         resumeUrl:
           type:
             - string
-            - "null"
           format: uri
         portfolioUrl:
           type:
             - string
-            - "null"
           format: uri
         socialLinks:
           type: array
@@ -1416,7 +1447,8 @@ components:
       properties:
         platform:
           type: string
-          example: "linkedin"
+          enum: [LINKEDIN, GITHUB, INSTAGRAM, YOUTUBE]
+          example: LINKEDIN
         url:
           type: string
           format: uri

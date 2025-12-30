@@ -1,4 +1,4 @@
-package com.luisjrz96.blog.adapters.web.controllers.category;
+package com.luisjrz96.blog.adapters.web.controllers.blog.category;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -15,7 +15,6 @@ import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
 import org.openapitools.jackson.nullable.JsonNullable;
 
-import com.luisjrz96.blog.adapters.web.controllers.blog.category.CategoryViewMapper;
 import com.luisjrz96.blog.adapters.web.dto.CategoryStatus;
 import com.luisjrz96.blog.adapters.web.dto.CategoryView;
 import com.luisjrz96.blog.application.blog.category.query.CategoryViewDto;

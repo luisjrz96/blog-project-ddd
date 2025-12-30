@@ -2,6 +2,7 @@ package com.luisjrz96.blog.adapters.web.controllers.exception;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,8 @@ import com.luisjrz96.blog.application.shared.error.ApplicationUnauthorizedExcept
 import com.luisjrz96.blog.application.shared.error.NotFoundException;
 import com.luisjrz96.blog.domain.exception.DomainException;
 
+import io.micrometer.tracing.Span;
+import io.micrometer.tracing.TraceContext;
 import io.micrometer.tracing.Tracer;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -111,6 +114,9 @@ public class ApiControllerAdvice {
   }
 
   private String traceId() {
-    return tracer.currentSpan() != null ? tracer.currentSpan().context().traceId() : "N/A";
+    return Optional.ofNullable(tracer.currentSpan())
+        .map(Span::context)
+        .map(TraceContext::traceId)
+        .orElse("N/A");
   }
 }
