@@ -55,7 +55,7 @@ public class AuthorProfile extends AggregateRoot {
     this.bio = e.bio();
     this.avatar = e.avatar();
     this.resumeUrl = e.resumeUrl();
-    this.portfolioUrl = e.portafolioUrl();
+    this.portfolioUrl = e.portfolioUrl();
     this.socialLinks = e.socialLinks();
     this.createdAt = e.createdAt();
     this.updatedAt = null;
@@ -66,7 +66,7 @@ public class AuthorProfile extends AggregateRoot {
     this.bio = e.bio();
     this.avatar = e.avatar();
     this.resumeUrl = e.resumeUrl();
-    this.portfolioUrl = e.portafolioUrl();
+    this.portfolioUrl = e.portfolioUrl();
     this.socialLinks = e.socialLinks();
     this.updatedAt = e.updatedAt();
   }

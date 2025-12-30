@@ -15,7 +15,7 @@ public record AuthorProfileUpdated(
     Markdown bio,
     ImageUrl avatar,
     Url resumeUrl,
-    Url portafolioUrl,
+    Url portfolioUrl,
     List<SocialLink> socialLinks,
     Instant updatedAt)
     implements DomainEvent {}
