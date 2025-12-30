@@ -1,4 +1,4 @@
-package com.luisjrz96.blog.adapters.web.controllers.category;
+package com.luisjrz96.blog.adapters.web.controllers.blog.category;
 
 import java.net.URI;
 import java.time.Instant;

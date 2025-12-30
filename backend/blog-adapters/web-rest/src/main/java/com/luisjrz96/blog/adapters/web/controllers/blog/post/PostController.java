@@ -1,4 +1,4 @@
-package com.luisjrz96.blog.adapters.web.controllers.post;
+package com.luisjrz96.blog.adapters.web.controllers.blog.post;
 
 import java.util.UUID;
 

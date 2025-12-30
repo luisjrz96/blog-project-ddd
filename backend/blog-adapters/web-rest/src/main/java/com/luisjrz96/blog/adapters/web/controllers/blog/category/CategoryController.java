@@ -1,4 +1,4 @@
-package com.luisjrz96.blog.adapters.web.controllers.category;
+package com.luisjrz96.blog.adapters.web.controllers.blog.category;
 
 import java.util.UUID;
 
@@ -26,10 +26,7 @@ import com.luisjrz96.blog.domain.blog.category.CategoryId;
 import com.luisjrz96.blog.domain.blog.category.CategoryName;
 import com.luisjrz96.blog.domain.shared.ImageUrl;
 
-import lombok.extern.log4j.Log4j2;
-
 @RestController
-@Log4j2
 public class CategoryController implements CategoriesApi {
 
   private final CategoryService categoryService;
@@ -101,7 +98,6 @@ public class CategoryController implements CategoriesApi {
 
   @Override
   public ResponseEntity<CategoryView> getCategory(String id) {
-    log.info("Getting category with id {}", id);
     var dto =
         categoryService.findById(new GetCategoryByIdQuery(new CategoryId(UUID.fromString(id))));
     return ResponseEntity.ok(mapper.toView(dto));

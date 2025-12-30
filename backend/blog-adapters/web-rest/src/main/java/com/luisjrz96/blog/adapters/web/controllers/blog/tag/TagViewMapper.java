@@ -1,4 +1,4 @@
-package com.luisjrz96.blog.adapters.web.controllers.tag;
+package com.luisjrz96.blog.adapters.web.controllers.blog.tag;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;

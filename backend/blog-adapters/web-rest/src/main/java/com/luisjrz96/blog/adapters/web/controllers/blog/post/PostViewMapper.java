@@ -1,4 +1,4 @@
-package com.luisjrz96.blog.adapters.web.controllers.post;
+package com.luisjrz96.blog.adapters.web.controllers.blog.post;
 
 import java.net.URI;
 import java.time.Instant;
@@ -60,10 +60,6 @@ public interface PostViewMapper {
   List<@Valid PostDetailViewTag> toPostDetailTagInnerList(List<PostTagViewDto> items);
 
   // ----------- HELPERS -----------
-  default OffsetDateTime toOffset(Instant instant) {
-    return instant == null ? null : OffsetDateTime.ofInstant(instant, ZoneOffset.UTC);
-  }
-
   default PostDetailViewCategory toPostDetailCategoryView(PostCategoryViewDto category) {
     if (category == null) return null;
     return new PostDetailViewCategory(
@@ -79,6 +75,10 @@ public interface PostViewMapper {
   default PostDetailViewTag toPostDetailTagView(PostTagViewDto postTagViewDto) {
     return new PostDetailViewTag(
         String.valueOf(postTagViewDto.id().value()), postTagViewDto.name().value());
+  }
+
+  default OffsetDateTime toOffset(Instant instant) {
+    return instant == null ? null : OffsetDateTime.ofInstant(instant, ZoneOffset.UTC);
   }
 
   default URI toURI(ImageUrl imageUrl) {
